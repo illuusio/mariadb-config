@@ -1,0 +1,22 @@
+[mariadb]
+# Defines a path to a PEM file that should contain one or more X509 certificates
+# for trusted Certificate Authorities (CAs) to use for TLS.
+# This system variable requires that you use the absolute path, not a relative path.
+# This system variable implies the ssl option. 
+#
+# https://mariadb.com/kb/en/ssltls-system-variables/#ssl_ca
+ssl_ca = /etc/ssl/mariadb/mariadb-ca.pem
+
+# Defines a path to the X509 certificate file to use for TLS.
+# This system variable requires that you use the absolute path,
+# not a relative path. This system variable implies the ssl option. 
+#
+# https://mariadb.com/kb/en/ssltls-system-variables/#ssl_cert
+ssl_cert = /etc/ssl/mariadb/mariadb-ssl.crt
+
+# Defines a path to a private key file to use for TLS.
+# This system variable requires that you use the absolute path,
+# not a relative path. This system variable implies the ssl option.
+#
+# https://mariadb.com/kb/en/ssltls-system-variables/#ssl_key
+ssl_key = /etc/ssl/mariadb/mariadb-ssl.key
