@@ -1,0 +1,38 @@
+---
+name: Test configuration on system MariaDB
+
+on:
+  workflow_call:
+    inputs:
+      container:
+        required: true
+        type: string
+      mariadb_server:
+        required: true
+        type: string
+
+jobs:
+  test-mariadb:
+    runs-on: ubuntu-latest
+    container: ${{ inputs.container }}
+
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      TZ: Etc/GMT
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Link correct timezone to '/etc/localtime'
+        run: ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+      - name: Enable automatic restarts from maint scripts
+        run : sed -i "s/101/0/g" -i /usr/sbin/policy-rc.d
+      - name: Fake /sbin/runlevel to avoid warnings of could not determine current runlevel
+        run: echo -e '#!/bin/sh\necho "N 5"' > /sbin/runlevel; chmod +x /sbin/runlevel
+      - name: Emit non-zero exit code also on warnings
+        run: echo 'APT::Update::Error-Mode "any";' > /etc/apt/apt.conf.d/non-zero-exit-on-warnings
+      - name: Run 'apt update'
+        run: apt update -qq
+      - name: Install package 'curl' 
+        run: apt install -y libcurl4 curl
+      - name: Install package '${{ inputs.mariadb_server }}'
+        run: apt install -y ${{ inputs.mariadb_server }}

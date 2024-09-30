@@ -1,0 +1,24 @@
+---
+name: Test MariaDB config on Ubuntu 22.04-24.04
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ubuntu_22_04_jammy:
+    uses: ./.github/workflows/reusable-mariadb.yml
+    with:
+      container: "ubuntu:22.04"
+      mariadb_server: "mariadb-server-10.6"
+
+  ubuntu_24_04_noble:
+    uses: ./.github/workflows/reusable-mariadb.yml
+    with:
+      container: "ubuntu:24.04"
+      mariadb_server: "mariadb-server"
+
