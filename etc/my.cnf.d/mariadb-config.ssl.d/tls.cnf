@@ -1,0 +1,8 @@
+[mariadb]
+# This system variable accepts a comma-separated list (with no whitespaces) of TLS protocol versions.
+# A TLS protocol version will only be enabled if it is present in this list.
+# All other TLS protocol versions will not be permitted.
+#
+# https://mariadb.com/kb/en/ssltls-system-variables/#tls_version
+tls_version = TLSv1.3
+

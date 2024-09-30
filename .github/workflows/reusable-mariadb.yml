@@ -25,26 +25,43 @@ jobs:
       - name: Link correct timezone to '/etc/localtime'
         run: ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
       - name: Enable automatic restarts from maint scripts
-        run : sed -i "s/101/0/g" -i /usr/sbin/policy-rc.d
+        run: sed -i "s/101/0/g" -i /usr/sbin/policy-rc.d
       - name: Fake /sbin/runlevel to avoid warnings of could not determine current runlevel
         run: echo -e '#!/bin/sh\necho "N 5"' > /sbin/runlevel; chmod +x /sbin/runlevel
       - name: Emit non-zero exit code also on warnings
         run: echo 'APT::Update::Error-Mode "any";' > /etc/apt/apt.conf.d/non-zero-exit-on-warnings
       - name: Run 'apt update'
-        run: apt update -qq
-      - name: Install package 'curl' 
-        run: apt install -y libcurl4 curl
+        run: |
+             apt update -qq
+             apt install -y libcurl4 curl easy-rsa
+      - name: Create self-signed cert with easyrsa
+        run: |
+             CUR_DIR="$(pwd)"
+             make-cadir "${CUR_DIR}/pki-ca"
+             cd pki-ca
+             ./easyrsa init-pki
+             ./easyrsa --batch build-ca nopass
+             ./easyrsa --batch build-server-full mariadb-server nopass
+             ./easyrsa --batch build-serverClient-full mariadb-client1 nopass
+             ./easyrsa --batch build-serverClient-full mariadb-client2 nopass
+             mkdir -p /etc/ssl/mariadb
+             cp pki/ca.crt /etc/ssl/mariadb/mariadb-ca.pem
+             cp pki/issued/mariadb-server.crt /etc/ssl/mariadb/mariadb-ssl.crt
+             cp pki/private/mariadb-server.key /etc/ssl/mariadb/mariadb-ssl.key
+             cp pki/issued/mariadb-client*.crt /etc/ssl/mariadb/
+             cp pki/private/mariadb-client*.key /etc/ssl/mariadb/
+             chmod a+r /etc/ssl/mariadb/*
       - name: Copy configs to /etc/mysql
         run: |
              mkdir /etc/mysql
-             cp -a etc/my.cnf.d/mariadb-config.general.d /etc/mysql
-             cp -a etc/my.cnf.d/mariadb-config.replication.d /etc/mysql
+             cp -a etc/my.cnf.d/mariadb-config.*.d /etc/mysql
       - name: Install package '${{ inputs.mariadb_server }}'
         run: apt install -y ${{ inputs.mariadb_server }}
       - name: Add include /etc/mysql/mariadb-config.general.d/ dir to my.cnf
         run: |
              echo "!includedir /etc/mysql/mariadb-config.general.d/" >> /etc/mysql/my.cnf
              echo "!includedir /etc/mysql/mariadb-config.replication.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/mariadb-config.ssl.d/" >> /etc/mysql/my.cnf
       - name: Reload MariaDB server
         run: /etc/init.d/mariadb restart
       - name: Check that InnoDB variables are applied
@@ -57,4 +74,3 @@ jobs:
         run: cat test/logbin-variables.sql | mariadb
       - name: Check MariaDB location
         run: find /var/lib/mysql
-
