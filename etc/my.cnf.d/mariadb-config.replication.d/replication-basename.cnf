@@ -1,0 +1,32 @@
+[mariadb]
+# This system variable is used with MariaDB replication to
+# identify unique primary and replica servers in a topology.
+# This system variable is also used with the binary log to determine
+# which server a specific transaction originated on.
+# * When MariaDB replication is used with standalone MariaDB Server,
+#   each server in the replication topology must have a unique server_id value.
+# * When MariaDB replication is used with MariaDB Galera Cluster,
+#   see Using MariaDB Replication with MariaDB Galera Cluster:
+#   Setting server_id on Cluster Nodes for more information on how to set the server_id values.
+# * In MariaDB 10.2.1 and below, the default server_id value is 0.
+#   If a replica's server_id value is 0, then all primary's will
+#   refuse its connection attempts. If a primary's server_id value is 0,
+#   then it will refuse all replica connection attempts.
+#
+# https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#server_id
+server_id = 1
+
+# Whether binary logging is enabled or not. If the --log-bin option is used,
+# log_bin will be set to ON, otherwise it will be OFF.
+# If no name option is given for --log-bin, datadir/'log-basename'-bin or
+# 'datadir'/mysql-bin will be used (the latter if --log-basename is not specified).
+# We strongly recommend you use either --log-basename or specify a filename to ensure
+# that replication doesn't stop if the real hostname of the computer changes.
+# The name option can optionally include an absolute path.
+# If no path is specified, the log will be written to the data directory.
+# The name can optionally include the file extension;
+# it will be stripped and only the file basename will be used.
+#
+# https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#log_bin
+log_bin = mariadb-server
+
