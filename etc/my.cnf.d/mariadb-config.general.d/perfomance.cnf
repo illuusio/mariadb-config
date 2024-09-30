@@ -1,0 +1,74 @@
+[mariadb]
+# If set to 1, LOCAL is supported for LOAD DATA INFILE statements.
+# If set to 0, usually for security reasons, attempts to perform a LOAD DATA LOCAL
+# will fail with an error message. 
+local_infile = OFF
+
+# Maximum size in bytes of a packet or a generated/intermediate string.
+# The packet message buffer is initialized with the value from net_buffer_length,
+# but can grow up to max_allowed_packet bytes. Set as large as the largest BLOB,
+#
+# in multiples of 1024. If this value is changed, it should be changed on the client side as well.
+# See slave_max_allowed_packet for a specific limit for replication purposes. 
+max_allowed_packet = 512M
+
+# The maximum number of simultaneous client connections.
+# See also Handling Too Many Connections.
+#
+# Note that this value affects the number of file descriptors required
+# on the operating system.
+#
+# Minimum was changed from 1 to 10 to avoid possible unexpected results for the user
+# (MDEV-18252). Note that MariaDB always has one reserved connection for a SUPER (or CONNECTION ADMIN user).
+# Additionally it can listen on a separate port, so will be available even when the max_connections
+# limit is reached. 
+#
+# https://mariadb.com/kb/en/server-system-variables/#max_connections
+max_connections = 256
+
+# Maximum size in bytes for user-created MEMORY tables.
+# Setting the variable while the server is active has no effect on existing tables
+# unless they are recreated or altered.
+#
+# The smaller of max_heap_table_size and tmp_table_size also limits internal in-memory tables.
+# When the maximum size is reached, any further attempts to insert data will receive a
+# "table ... is full" error. Temporary tables created with CREATE TEMPORARY will not be converted to Aria,
+# as occurs with internal temporary tables, but will also receive a table full error. 
+#
+# https://mariadb.com/kb/en/server-system-variables/#max_heap_table_size
+max_heap_table_size = 256M
+
+# If set to 1 (0 is default), enables the Performance Schema
+#
+# https://mariadb.com/kb/en/performance-schema-system-variables/#performance_schema
+performance_schema = ON
+
+# Size in bytes for which results larger than this are not stored in the query cache. 
+#
+# https://mariadb.com/kb/en/server-system-variables/#query_cache_limit
+query_cache_limit = 128M
+
+# Size in bytes available to the query cache. About 40KB is needed for query cache structures,
+# so setting a size lower than this will result in a warning. 0, the default before MariaDB 10.1.7,
+# effectively disables the query cache. 
+#
+# https://mariadb.com/kb/en/server-system-variables/#query_cache_size
+query_cache_size = 10M
+
+# Maximum number of open tables cached in one table cache instance.
+# See Optimizing table_open_cache for suggestions on optimizing.
+# Increasing table_open_cache increases the number of file descriptors required. 
+#
+# https://mariadb.com/kb/en/server-system-variables/#table_open_cache
+table_open_cache = 4096
+
+# The largest size for temporary tables in memory (not MEMORY tables) although
+# if max_heap_table_size is smaller the lower limit will apply.
+# You can see if it's necessary to increase by comparing the status variables
+# Created_tmp_disk_tables and Created_tmp_tables to see how many temporary tables
+# out of the total created needed to be converted to disk. Often complex GROUP BY
+# queries are responsible for exceeding the limit. Defaults may be different on some systems,
+# see for example Differences in MariaDB in Debian.
+#
+# https://mariadb.com/kb/en/server-system-variables/#tmp_table_size
+tmp_table_size = 256M
