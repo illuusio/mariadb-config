@@ -1,0 +1,100 @@
+[mariadb]
+# InnoDB buffer pool size in bytes.
+#
+# The primary value to adjust on a database server with
+# entirely/primarily InnoDB tables, can be set up to 80% of
+# the total memory in these environments.
+#
+# See the InnoDB Buffer Pool for more on setting this variable,
+# and also Setting InnoDB Buffer Pool Size Dynamically
+# if doing so dynamically.
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_buffer_pool_size
+innodb_buffer_pool_size = 1G
+
+# Compression algorithm used for InnoDB page compression.
+# zlib: Pages are compressed using the bundled zlib compression algorithm.
+# This is mainly chosen because Zlib is fast and it does not
+# burn your CPU. Change to 'none' if CPU throtles under pressure
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_compression_algorithm
+innodb_compression_algorithm = zlib
+
+# Whether or not InnoDB page compression is enabled by default for new tables.
+# * The default value is OFF, which means new tables are not compressed.
+# * See InnoDB Page Compression: Enabling InnoDB Page Compression by Default for more information. 
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_compression_default
+innodb_compression_default = ON
+
+# Specifies the default level of compression for tables that use InnoDB page compression.
+# * Only a subset of InnoDB page compression algorithms support compression levels.
+#   If an InnoDB page compression algorithm does not support compression levels,
+#   then the compression level value is ignored.
+# * The compression level can be set to any value between 1 and 9.
+#   The default compression level is 6. The range goes from the fastest to the most compact,
+#   which means that 1 is the fastest and 9 is the most compact.
+# * See InnoDB Page Compression: Configuring the Default Compression Level for more information. 
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_compression_level
+innodb_compression_level = 9
+
+# If set to ON, then new InnoDB tables are created with their own InnoDB file-per-table tablespaces.
+# If set to OFF, then new tables are created in the InnoDB system tablespace instead.
+# Page compression is only available with file-per-table tablespaces.
+# Note that this value is also used when a table is re-created with an ALTER TABLE which
+# requires a table copy. Deprecated in MariaDB 11.0 as there's no benefit to setting to OFF,
+# the original InnoDB default. 
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_file_per_table 
+innodb_file_per_table = ON
+
+# InnoDB flushing method. Windows always uses async_unbuffered and this variable then has no effect.
+# On Unix, before MariaDB 10.6.0, by default fsync() is used to flush data and logs.
+# Adjusting this variable can give performance improvements, but behavior differs widely
+# on different filesystems, and changing from the default has caused problems in some situations,
+# so test and benchmark carefully before adjusting. In MariaDB, Windows recognises and correctly
+# handles the Unix methods, but if none are specified it uses own default - unbuffered write
+# (analog of O_DIRECT) + syncs (e.g FileFlushBuffers()) for all files.
+#
+# O_DIRECT - O_DIRECT or directio(), is used to open data files, and fsync() to flush data and logs.
+# Default on Unix from MariaDB 10.6.0.  fsync - Default on Unix until MariaDB 10.5.
+# Can be specified directly, but if the variable is unset on Unix, fsync() will be used by default.
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_flush_method
+innodb_flush_method = O_DIRECT
+
+# Size in bytes of each InnoDB redo log file in the log group.
+# The combined size can be no more than 512GB.
+# Larger values mean less disk I/O due to less flushing checkpoint activity,
+# but also slower recovery from a crash.  In MariaDB 10.5, crash recovery has been improved
+# and shouldn't run out of memory, so the default has been increased. It can safely be set
+# higher to reduce checkpoint flushing, even larger than innodb_buffer_pool_size.
+# From MariaDB 10.9 the variable is dynamic, and the server no longer needs to
+# be restarted for the resizing to take place. Unless the log is located in a
+# persistent memory file system (PMEM), an attempt to SET GLOBAL innodb_log_file_size to
+# less than innodb_log_buffer_size will be refused. Log resizing can be aborted by
+# killing the connection that is executing the SET GLOBAL statement. 
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_log_file_size
+innodb_log_file_size = 128M
+
+
+# Number of I/O threads for InnoDB reads. You may on rare occasions need to reduce this
+# default on Linux systems running multiple MariaDB servers to avoid exceeding system limits.
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_read_io_threads
+innodb_read_io_threads = 32
+
+# Implement atomic writes on supported SSD devices.
+# See atomic write support for other variables affected when this is set.
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_use_atomic_writes
+innodb_use_atomic_writes = ON
+
+# Number of I/O threads for InnoDB writes.
+# You may on rare occasions need to reduce this default on Linux systems running multiple
+# MariaDB servers to avoid exceeding system limits. 
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_write_io_threads
+innodb_write_io_threads = 32
