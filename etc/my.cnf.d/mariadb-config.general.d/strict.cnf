@@ -1,0 +1,20 @@
+[mariadb]
+# A mode where at least one of STRICT_TRANS_TABLES or STRICT_ALL_TABLES is enabled is called strict mode.
+# With strict mode set (default from MariaDB 10.2.4), statements that modify tables
+# (either transactional for STRICT_TRANS_TABLES or all for STRICT_ALL_TABLES) will fail, and
+# an error will be returned instead. The IGNORE keyword can be used when strict mode is set to
+# convert the error to a warning.
+#
+# With strict mode not set (default in version <= MariaDB 10.2.3), MariaDB will automatically
+# adjust invalid values, for example, truncating strings that are too long, or adjusting numeric
+# values that are out of range, and produce a warning.
+# 
+# Statements that don't modify data will return a warning when adjusted regardless of mode.
+#
+# STRICT_ALL_TABLES
+# Strict mode. Statements with invalid or missing data are aborted and rolled back.
+# For a non-transactional storage engine with a statement affecting multiple rows,
+# this may mean a partial insert or update if the error is found in a row beyond the first.
+#
+# https://mariadb.com/kb/en/sql-mode/#strict_all_tables
+sql_mode = STRICT_ALL_TABLES

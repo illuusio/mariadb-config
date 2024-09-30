@@ -48,4 +48,6 @@ jobs:
         run: cat test/innodb-variables.sql | mariadb
       - name: Check that MariaDB system variables are applied
         run: cat test/system-variables.sql | mariadb
+      - name: Check that MariaDB strict variables are applied
+        run: cat test/strict-variables.sql | mariadb
 
