@@ -1,0 +1,59 @@
+[mariadb]
+# Mixed logging is the default binary log format.
+#
+# When mixed logging is enabled, the server uses a combination of statement-based
+# logging and row-based logging. Statement-based logging is used where possible,
+# but when the server determines a statement may not be safe for statement-based logging,
+# it will use row-based logging instead.
+#
+# See Unsafe Statements for Statement-based Replication: Unsafe Statements for a list of unsafe statements.
+#
+# During one transaction, some statements may be logged with row logging while others are
+# logged with statement-based logging.
+#
+# https://mariadb.com/kb/en/binary-log-formats/
+binlog_format = MIXED
+
+# Number of days after which the binary log can be automatically removed.
+# By default 0, or no automatic removal. When using replication, should always be set higher than
+# the maximum lag by any replica.
+# Removals take place when the server starts up, when the binary log is flushed,
+# when the next binary log is created after the previous one reaches the maximum size,
+# or when running PURGE BINARY LOGS.
+# Units are whole days (integer) until MariaDB 10.6.0, or 1/1000000 precision (double) from MariaDB 10.6.1.
+# Starting from MariaDB 10.6.1, expire_logs_days and binlog_expire_logs_seconds are forms of aliases,
+# such that changes to one automatically reflect in the other. 
+#
+# https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#expire_logs_days
+expire_logs_days = 7
+
+# Whether or not the binary log can be compressed. 0 (the default) means no compression.
+# See Compressing Events to Reduce Size of the Binary Log.
+#
+# https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#log_bin_compress
+log_bin_compress = ON
+
+# Functions and triggers can be dangerous when used with replication.
+# Certain types of functions and triggers may have unintended consequences when the
+# statements are applied on a replica. For that reason, there are some restrictions on the
+# creation of functions and triggers when the binary log is enabled by default, such as:
+# * When log_bin_trust_function_creators is OFF and log_bin is ON,
+#   CREATE FUNCTION and ALTER FUNCTION statements will trigger an error
+#   if the function is defined with any of the NOT DETERMINISTIC,
+#   CONTAINS SQL or MODIFIES SQL DATA characteristics.
+# * This means that when log_bin_trust_function_creators is OFF
+#   and log_bin is ON, CREATE FUNCTION and ALTER FUNCTION statements will
+#   only succeed if the function is defined with any of the DETERMINISTIC,
+#   NO SQL, or READS SQL DATA characteristics.
+# * When log_bin_trust_function_creators is OFF and log_bin is ON,
+#   the SUPER privilege is also required to execute the following statements:
+#   - CREATE FUNCTION
+#   - CREATE TRIGGER
+#   - DROP TRIGGER 
+# * Setting log_bin_trust_function_creators to ON removes these requirements
+#   around functions characteristics and the SUPER privileges. See Binary Logging of
+#   Stored Routines for more informatio
+#
+# https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#log_bin_trust_function_creators
+log_bin_trust_function_creators = ON
+

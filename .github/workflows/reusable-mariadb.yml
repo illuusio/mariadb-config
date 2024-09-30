@@ -38,10 +38,13 @@ jobs:
         run: |
              mkdir /etc/mysql
              cp -a etc/my.cnf.d/mariadb-config.general.d /etc/mysql
+             cp -a etc/my.cnf.d/mariadb-config.replication.d /etc/mysql
       - name: Install package '${{ inputs.mariadb_server }}'
         run: apt install -y ${{ inputs.mariadb_server }}
       - name: Add include /etc/mysql/mariadb-config.general.d/ dir to my.cnf
-        run: echo "!includedir /etc/mysql/mariadb-config.general.d/" >> /etc/mysql/my.cnf
+        run: |
+             echo "!includedir /etc/mysql/mariadb-config.general.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/mariadb-config.replication.d/" >> /etc/mysql/my.cnf
       - name: Reload MariaDB server
         run: /etc/init.d/mariadb restart
       - name: Check that InnoDB variables are applied
@@ -50,4 +53,8 @@ jobs:
         run: cat test/system-variables.sql | mariadb
       - name: Check that MariaDB strict variables are applied
         run: cat test/strict-variables.sql | mariadb
+      - name: Check that MariaDB logbin variables are applied
+        run: cat test/logbin-variables.sql | mariadb
+      - name: Check MariaDB location
+        run: find /var/lib/mysql
 
