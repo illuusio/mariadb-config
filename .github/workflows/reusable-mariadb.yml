@@ -51,6 +51,12 @@ jobs:
              cp pki/issued/mariadb-client*.crt /etc/ssl/mariadb/
              cp pki/private/mariadb-client*.key /etc/ssl/mariadb/
              chmod a+r /etc/ssl/mariadb/*
+      - name: Create encrypting keys
+        run: |
+             cd /etc/ssl/mariadb/
+             (echo -n "1;"; openssl rand -hex 32) > /etc/ssl/mariadb/mariadb-keyfile.plain
+             openssl rand -hex 128 > /etc/ssl/mariadb/mariadb-pass.keyfile
+             openssl enc -aes-256-cbc -md sha1 -pass file:/etc/ssl/mariadb/mariadb-pass.keyfile -in /etc/ssl/mariadb/mariadb-keyfile.plain -out /etc/ssl/mariadb/mariadb-keyfile.encrypted
       - name: Copy configs to /etc/mysql
         run: |
              mkdir /etc/mysql
@@ -62,6 +68,7 @@ jobs:
              echo "!includedir /etc/mysql/mariadb-config.general.d/" >> /etc/mysql/my.cnf
              echo "!includedir /etc/mysql/mariadb-config.replication.d/" >> /etc/mysql/my.cnf
              echo "!includedir /etc/mysql/mariadb-config.ssl.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/mariadb-config.encrypt.d/" >> /etc/mysql/my.cnf
       - name: Reload MariaDB server
         run: /etc/init.d/mariadb restart
       - name: Check that InnoDB variables are applied

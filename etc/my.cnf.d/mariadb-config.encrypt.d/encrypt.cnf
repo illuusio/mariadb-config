@@ -1,0 +1,14 @@
+[mariadb]
+# MariaDB Server can encrypt the server's binary logs and relay logs.
+# This ensures that your binary logs are only accessible through MariaDB.
+#
+# https://mariadb.com/kb/en/encrypting-binary-logs/
+encrypt_binlog = ON
+
+# MariaDB also creates temporary files on disk. For example, a binary log cache will be
+# written to a temporary file if the binary log cache exceeds binlog_cache_size or
+# binlog_stmt_cache_size, and temporary files are also often used for filesorts during query execution.
+# Since MariaDB 10.1.5, these temporary files can also be encrypted if encrypt_tmp_files=ON is set.
+#
+# https://mariadb.com/kb/en/data-at-rest-encryption-overview/#encrypting-temporary-files
+encrypt_tmp_files = ON
