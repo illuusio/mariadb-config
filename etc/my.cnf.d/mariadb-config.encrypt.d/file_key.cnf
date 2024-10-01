@@ -1,0 +1,36 @@
+[mariadb]
+# This system variable is used to determine which algorithm the plugin will use to encrypt data.
+# The recommended algorithm is AES_CTR, but this algorithm is only available when MariaDB is built
+# with recent versions of OpenSSL. If the server is built with wolfSSL or yaSSL,
+# then this algorithm is not available. See TLS and Cryptography Libraries Used by MariaDB
+# for more information about which libraries are used on which platforms. 
+#
+# https://mariadb.com/kb/en/file-key-management-encryption-plugin/#file_key_management_encryption_algorithm
+file_key_management_encryption_algorithm = AES_CTR
+
+# This system variable is used to determine the encryption password that is used to decrypt the key file defined by file_key_management_filename.
+# *  If this system variable's value is prefixed with FILE:,
+#    then it is interpreted as a path to a file that contains the plain-text encryption password.
+# *  If this system variable's value is not prefixed with FILE:,
+#    then it is interpreted as the plain-text encryption password. However, this is not recommended.
+# *  The encryption password has a max length of 256 characters.
+# *  The only algorithm that MariaDB currently supports when decrypting the key
+#    file is Cipher Block Chaining (CBC) mode of Advanced Encryption Standard (AES).
+#    The encryption key size can be 128-bits, 192-bits, or 256-bits.
+#    The encryption key is calculated by taking a SHA-1 hash of the encryption password.
+#
+# https://mariadb.com/kb/en/file-key-management-encryption-plugin/#file_key_management_filekey
+file_key_management_filekey = FILE:/etc/ssl/mariadb/mariadb-pass.keyfile
+
+# This system variable is used to determine the path to the file that contains the encryption keys.
+# If file_key_management_filekey is set, then this file can be encrypted with Cipher Block Chaining (CBC)
+# mode of Advanced Encryption Standard (AES). 
+#
+# https://mariadb.com/kb/en/file-key-management-encryption-plugin/#file_key_management_filename
+file_key_management_filename = /etc/ssl/mariadb/mariadb-keyfile.encrypted
+
+# Plugins are server components that enhance MariaDB in some way.
+#
+# https://mariadb.com/kb/en/plugin-overview/
+plugin_load_add = file_key_management
+
