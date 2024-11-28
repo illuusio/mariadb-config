@@ -1,0 +1,38 @@
+[mariadb]
+# If set to 0, the default unless the --slow-query-log option is used, the slow query log
+# is disabled, while if set to 1 (both global and session variables), the slow query log
+# is enabled. From MariaDB 10.11.0, an alias for log_slow_query.
+#
+# https://mariadb.com/kb/en/server-system-variables/#slow_query_log
+slow_query_log = 1
+
+# Controls information to be added to the slow query log. Options are added
+# in a comma-delimited string. See also Slow Query Log Extended Statistics.
+# log_slow_verbosity is not supported when log_output='TABLE'.
+#
+# * query_plan logs query execution plan information
+# * innodb Alias to engine (from MariaDB 10.6.15 and MariaDB 10.11.5),
+#   previously ignored.
+# * explain prints EXPLAIN output in the slow query log.
+#   See EXPLAIN in the Slow Query Log.
+# * engine Logs engine statistics (from MariaDB 10.6.15 and MariaDB 10.11.5).
+# * warnings Print all errors, warnings and notes for the statement to
+#   the slow query log. (from MariaDB 10.6.16).
+# * all Enables all above options (From MariaDB 10.6.16)
+# * full Enables all above options.
+#
+# https://mariadb.com/kb/en/server-system-variables/#log_slow_verbosity
+log_slow_verbosity = all
+
+# If a query takes longer than this many seconds to execute (microseconds
+# can be specified too), the Slow_queries status variable is incremented
+# and, if enabled, the query is logged to the slow query log.
+# Before MariaDB 10.11, was named long_query_time.
+# Affected by log_slow_rate_limit and log_slow_min_examined_row_limit.
+#
+# https://mariadb.com/kb/en/server-system-variables/#log_slow_query_time
+long_query_time = 2.5
+
+# log_slow_query_time should be use from 10.11 and upwards. Using long_query_time for maximum
+# compability
+# log_slow_query_time = 2.5
