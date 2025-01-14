@@ -60,15 +60,15 @@ jobs:
       - name: Copy configs to /etc/mysql
         run: |
              mkdir /etc/mysql
-             cp -a etc/mariadb-config/mariadb-config.*.d /etc/mysql
+             cp -a etc/mariadb-config/*.d /etc/mysql
       - name: Install package '${{ inputs.mariadb_server }}'
         run: apt install -y ${{ inputs.mariadb_server }}
-      - name: Add include /etc/mysql/mariadb-config.general.d/ dir to my.cnf
+      - name: Add include /etc/mysql/general.d/ dir to my.cnf
         run: |
-             echo "!includedir /etc/mysql/mariadb-config.general.d/" >> /etc/mysql/my.cnf
-             echo "!includedir /etc/mysql/mariadb-config.replication.d/" >> /etc/mysql/my.cnf
-             echo "!includedir /etc/mysql/mariadb-config.ssl.d/" >> /etc/mysql/my.cnf
-             echo "!includedir /etc/mysql/mariadb-config.encrypt.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/general.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/replication.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/ssl.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mysql/encrypt.d/" >> /etc/mysql/my.cnf
       - name: Reload MariaDB server
         run: /etc/init.d/mariadb restart
       - name: Check that InnoDB variables are applied
