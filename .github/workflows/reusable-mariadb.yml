@@ -60,7 +60,7 @@ jobs:
       - name: Copy configs to /etc/mysql
         run: |
              mkdir /etc/mysql
-             cp -a etc/my.cnf.d/mariadb-config.*.d /etc/mysql
+             cp -a etc/mariadb-config/mariadb-config.*.d /etc/mysql
       - name: Install package '${{ inputs.mariadb_server }}'
         run: apt install -y ${{ inputs.mariadb_server }}
       - name: Add include /etc/mysql/mariadb-config.general.d/ dir to my.cnf
