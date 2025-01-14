@@ -43,18 +43,6 @@ max_heap_table_size = 256M
 # https://mariadb.com/kb/en/performance-schema-system-variables/#performance_schema
 performance_schema = ON
 
-# Size in bytes for which results larger than this are not stored in the query cache. 
-#
-# https://mariadb.com/kb/en/server-system-variables/#query_cache_limit
-query_cache_limit = 128M
-
-# Size in bytes available to the query cache. About 40KB is needed for query cache structures,
-# so setting a size lower than this will result in a warning. 0, the default before MariaDB 10.1.7,
-# effectively disables the query cache. 
-#
-# https://mariadb.com/kb/en/server-system-variables/#query_cache_size
-query_cache_size = 10M
-
 # Maximum number of open tables cached in one table cache instance.
 # See Optimizing table_open_cache for suggestions on optimizing.
 # Increasing table_open_cache increases the number of file descriptors required. 

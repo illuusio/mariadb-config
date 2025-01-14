@@ -7,13 +7,6 @@
 # https://mariadb.com/kb/en/server-system-variables/#skip_name_resolve
 skip-name-resolve = ON
 
-# Maximum number of open tables cached in one table cache instance.
-# See Optimizing table_open_cache for suggestions on optimizing.
-# Increasing table_open_cache increases the number of file descriptors required.
-#
-# https://mariadb.com/kb/en/server-system-variables/#table_open_cache
-table_open_cache = 4096
-
 # Size in bytes for which results larger than this are not stored in the query cache.
 #
 # https://mariadb.com/kb/en/server-system-variables/#query_cache_limit
