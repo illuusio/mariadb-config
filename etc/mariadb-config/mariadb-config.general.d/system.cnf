@@ -1,0 +1,37 @@
+[mariadb]
+# If set to 1 (0 is the default), only IP addresses are used for connections.
+# Host names are not resolved.
+#
+# All host values in the GRANT tables must be IP addresses (or localhost). 
+#
+# https://mariadb.com/kb/en/server-system-variables/#skip_name_resolve
+skip-name-resolve = ON
+
+# Maximum number of open tables cached in one table cache instance.
+# See Optimizing table_open_cache for suggestions on optimizing.
+# Increasing table_open_cache increases the number of file descriptors required.
+#
+# https://mariadb.com/kb/en/server-system-variables/#table_open_cache
+table_open_cache = 4096
+
+# Size in bytes for which results larger than this are not stored in the query cache.
+#
+# https://mariadb.com/kb/en/server-system-variables/#query_cache_limit
+query_cache_limit = 512M
+
+# Size in bytes available to the query cache. About 40KB is needed for query cache
+# structures, so setting a size lower than this will result in a warning. 0,
+# the default before MariaDB 10.1.7, effectively disables the query cache.
+#
+# https://mariadb.com/kb/en/server-system-variables/#query_cache_size
+query_cache_size = 0
+
+# If set to 0, the query cache is disabled (although a buffer of query_cache_size
+# bytes is still allocated). If set to 1 all SELECT queries will be cached unless
+# SQL_NO_CACHE is specified. If set to 2 (or DEMAND), only queries with the SQL CACHE
+# clause will be cached.
+# Note that if the server is started with the query cache disabled, it cannot be enabled at runtime.
+#
+# https://mariadb.com/kb/en/server-system-variables/#query_cache_type
+query_cache_type = 2
+
