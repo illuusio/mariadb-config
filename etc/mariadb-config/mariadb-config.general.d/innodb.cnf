@@ -88,8 +88,14 @@ innodb_io_capacity = 2000
 # killing the connection that is executing the SET GLOBAL statement. 
 #
 # https://mariadb.com/kb/en/innodb-system-variables/#innodb_log_file_size
-innodb_log_file_size = 128M
+innodb_log_file_size = 256M
 
+# Size in bytes of the buffer for writing InnoDB redo log files to disk.
+# Increasing this means larger transactions can run without needing to perform
+# disk I/O before committing.
+#
+# https://mariadb.com/kb/en/innodb-system-variables/#innodb_log_buffer_size
+innodb_log_buffer_size = 16M
 
 # Number of I/O threads for InnoDB reads. You may on rare occasions need to reduce this
 # default on Linux systems running multiple MariaDB servers to avoid exceeding system limits.
