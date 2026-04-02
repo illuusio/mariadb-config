@@ -10,15 +10,18 @@ on:
       - main
 
 jobs:
-  ubuntu_22_04_jammy:
+  ubuntu_24_04_noble_numbat:
     uses: ./.github/workflows/reusable-mariadb.yml
     with:
-      container: "ubuntu:22.04"
-      mariadb_server: "mariadb-server-10.6"
+      container: ubuntu:24.04
+      mariadb_server: mariadb-server
+      mariadb_directory: /var/lib/mysql
 
-  ubuntu_24_04_noble:
+
+  ubuntu_25_10_questing_quokka:
     uses: ./.github/workflows/reusable-mariadb.yml
     with:
-      container: "ubuntu:24.04"
-      mariadb_server: "mariadb-server"
+      container: ubuntu:25.10
+      mariadb_server: mariadb-server
+      mariadb_directory: /var/lib/mysql
 

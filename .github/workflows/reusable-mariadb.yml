@@ -10,6 +10,9 @@ on:
       mariadb_server:
         required: true
         type: string
+      mariadb_directory:
+        required: true
+        type: string
 
 jobs:
   test-mariadb:
@@ -59,16 +62,16 @@ jobs:
              openssl enc -aes-256-cbc -md sha1 -pass file:/etc/ssl/mariadb/mariadb-pass.keyfile -in /etc/ssl/mariadb/mariadb-keyfile.plain -out /etc/ssl/mariadb/mariadb-keyfile.encrypted
       - name: Copy configs to /etc/mysql
         run: |
-             mkdir /etc/mysql
-             cp -a etc/mariadb-config/*.d /etc/mysql
+             cp -a etc/mariadb-config /etc
       - name: Install package '${{ inputs.mariadb_server }}'
         run: apt install -y ${{ inputs.mariadb_server }}
-      - name: Add include /etc/mysql/general.d/ dir to my.cnf
+      - name: Add includes /etc/mariadb-config dirs to my.cnf
         run: |
-             echo "!includedir /etc/mysql/general.d/" >> /etc/mysql/my.cnf
-             echo "!includedir /etc/mysql/replication.d/" >> /etc/mysql/my.cnf
-             echo "!includedir /etc/mysql/ssl.d/" >> /etc/mysql/my.cnf
-             echo "!includedir /etc/mysql/encrypt.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mariadb-config/general.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mariadb-config/replication.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mariadb-config/ssl.d/" >> /etc/mysql/my.cnf
+             echo "!includedir /etc/mariadb-config/encrypt.d/" >> /etc/mysql/my.cnf
+             echo -e "[mariadbd]\nlog_bin_basename = test_server" > /etc/mysql/mariadb.conf.d/log_bin_basename.cnf
       - name: Reload MariaDB server
         run: /etc/init.d/mariadb restart
       - name: Check that InnoDB variables are applied
@@ -80,4 +83,4 @@ jobs:
       - name: Check that MariaDB logbin variables are applied
         run: cat test/logbin-variables.sql | mariadb
       - name: Check MariaDB location
-        run: find /var/lib/mysql
+        run: find ${{ inputs.mariadb_directory }}

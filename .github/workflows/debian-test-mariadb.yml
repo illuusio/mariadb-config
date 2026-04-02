@@ -1,5 +1,5 @@
 ---
-name: Test MariaDB config on Debian 11-12 and testing
+name: Test MariaDB config on Debian 13 and testing
 
 on:
   push:
@@ -10,21 +10,16 @@ on:
       - main
 
 jobs:
-  debian_11_bullseye:
+  debian_13_trixie:
     uses: ./.github/workflows/reusable-mariadb.yml
     with:
-      container: "debian:11"
-      mariadb_server: "mariadb-server-10.5"
+      container: debian:13
+      mariadb_server: mariadb-server
+      mariadb_directory: /var/lib/mysql
 
-  debian_12_bookworm:
+  debian_sid_unstable:
     uses: ./.github/workflows/reusable-mariadb.yml
     with:
-      container: "debian:12"
-      mariadb_server: "mariadb-server"
-
-  debian_sid_testing:
-    uses: ./.github/workflows/reusable-mariadb.yml
-    with:
-      container: "debian:testing"
-      mariadb_server: "mariadb-server"
-
+      container: debian:unstable
+      mariadb_server: mariadb-server
+      mariadb_directory: /var/lib/mariadb
