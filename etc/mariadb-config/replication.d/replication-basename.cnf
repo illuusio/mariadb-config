@@ -28,5 +28,5 @@ server_id = 1
 # it will be stripped and only the file basename will be used.
 #
 # https://mariadb.com/kb/en/replication-and-binary-log-system-variables/#log_bin
-log_bin = mariadb-server
+log_bin = ON
 
