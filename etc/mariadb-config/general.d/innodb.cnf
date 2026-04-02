@@ -37,7 +37,7 @@ innodb_compression_default = ON
 # * See InnoDB Page Compression: Configuring the Default Compression Level for more information. 
 #
 # https://mariadb.com/kb/en/innodb-system-variables/#innodb_compression_level
-innodb_compression_level = 9
+innodb_compression_level = 6
 
 # If set to ON, then new InnoDB tables are created with their own InnoDB file-per-table tablespaces.
 # If set to OFF, then new tables are created in the InnoDB system tablespace instead.
